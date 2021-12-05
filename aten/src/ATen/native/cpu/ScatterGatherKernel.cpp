@@ -201,10 +201,10 @@ struct cpu_scatter_gather_base_kernel {
     std::vector<int64_t> shape(src.dim());
 
     for (unsigned int i = 0; i < shape.size(); i++){
-      shape[i] = min(src_size[i], index_size[i]);
+      shape[i] = std::min(src_size[i], index_size[i]);
     }
 
-    auto src_restrided = src.reshape(shape)
+    auto src_restrided = src.reshape(shape);
     auto index_restrided = index.reshape_as(src_restrided);
     auto output = self.reshape_as(src_restrided);
 

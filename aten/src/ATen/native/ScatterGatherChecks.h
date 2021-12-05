@@ -98,7 +98,7 @@ static C10_UNUSED void scatter_shape_check(
     TORCH_CHECK(!is_wrong_shape,
       "Expected index ", index.sizes(),
       " to be smaller than self ", self.sizes(),
-      " apart from dimension ", dim,
+      " apart from dimension ", dim
     );
   }
   
