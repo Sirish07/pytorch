@@ -1306,22 +1306,6 @@ class AbstractTestCases:
                 torch._scatter_reduce(input, dim, index, "sum", out=output)
                 self.assertTrue(torch.allclose(output, expected))
 
-        def test_scatter_index_larger_src(self):
-            shape_src = 3, 5
-            index = torch.ones((3, 7), dtype=torch.long)
-            output = torch.zeros(shape_src)
-            values = torch.ones(shape_src)
-            output.scatter_(1, index, values, reduce='add')
-            expected = torch.tensor(
-                [
-                    [0., 7, 0., 0., 0.],
-                    [0., 7, 0., 0., 0.],
-                    [0., 7, 0., 0., 0.]
-                ]
-            )
-
-            self.assertEqual(output, expected, atol=0, rtol=0)
-
             with self.assertRaisesRegex(RuntimeError, "Expected `dim` to be in range -3 to 2"):
                 torch._scatter_reduce(input, 4, index, "sum")
 
@@ -1336,6 +1320,22 @@ class AbstractTestCases:
                 input2 = torch.randn(10, dtype=dtype, device=device)
                 index2 = torch.tensor([0, 1, 0, 1, 2, 3, 3, 4, 4, 3])
                 torch._scatter_reduce(input2, 0, index2, "sum", output_size=2)
+        
+        def test_scatter_index_larger_src(self):
+            shape_src = 3, 5
+            index = torch.ones((3, 7), dtype=torch.long)
+            output = torch.zeros(shape_src)
+            values = torch.ones(shape_src)
+            output.scatter_(1, index, values, reduce='add')
+            expected = torch.tensor(
+                [
+                    [0, 7, 0, 0, 0],
+                    [0, 7, 0, 0, 0],
+                    [0, 7, 0, 0, 0]
+                ]
+            )
+
+            self.assertEqual(output, expected, atol=0, rtol=0)
 
         def test_structseq_repr(self):
             a = torch.arange(250).reshape(5, 5, 10)
